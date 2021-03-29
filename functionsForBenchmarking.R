@@ -89,7 +89,7 @@ simSample <- function(sampleDim,
         #assumes the probVec is sorted in decreasing order.
         #this is guaranteed by the calling function.
         #
-        #in the spiked in regime, we increase the prevalance of the target population
+        #in the spiked regime, we increase the prevalance of the target population
         #to the mass in the targetRank vector
         currentSpikeMass <- probVec[targetRanks[2]]
         targetSpikeMass <- probVec[targetRanks[1]]
@@ -125,11 +125,12 @@ simSample <- function(sampleDim,
         }
         currentMu <- as.numeric(fixedMeanMatrix[clusterNumber,,drop=TRUE])
         if (hasBatchEffect) {
-            currentMu <- currentMu + batchEffect #a constant batch effect translates the sample mean.
+            #when the parameter is set, the batch effect translates the sample mean.
+            currentMu <- currentMu + batchEffect 
         }
         #simulate subject-to-subject variability by perturbing the mean vector
         subjectShift <- round(rnorm(length(currentMu),mean=0,sd=(1/sqrt(2))))
-        currentMu <- currentMu + subjectShift #model sample specifc translations of the mean vector
+        currentMu <- currentMu + subjectShift 
         currentLabel <- fixedLabelVector[clusterNumber]
         outLabel <- append(outLabel,rep(currentLabel,sampleSizeVec[clusterNumber]))
         currentSigma<- Posdef(sampleDim)
@@ -254,7 +255,7 @@ simulateExperiment <- function(
                                randomSeed=0,#reproducibility
                                transformationList=list(function(x){return(x)},
                                                        function(x){return(x)},
-                                                       function(x){return(x)}), #column-wise transformations to apply to 
+                                                       function(x){return(x)}), #column-wise transformations 
                                noiseDimension=5,#how many nuisance variables
                                probVecIn, #the mixture weights
                                minSampleSize=5000,
@@ -283,8 +284,8 @@ simulateExperiment <- function(
     currentSample <- 1
     startKnockoutNum <- numSamples - knockoutNumber + 1
     isKnockoutSample <- FALSE
-    #the regime determines if we spike in a population
-    #regime==1 -> spike it in.
+    #the regime determines if we spike a population
+    #regime==1 -> spike it.
     regime <- rep(0,numSamples)
     regime[sample(seq(numSamples),(numSamples/2))] <- 1
     if (fixedResFlag) {
@@ -295,7 +296,7 @@ simulateExperiment <- function(
     nextBatchEffect <- rep((-1*batchEffectShift),ncol(sampleSpecs$fixedMeanMatrix))
     regimeList <- knockoutList <- labelsList <- flowList <- truthList <- list()
     while (currentSample <= numSamples) {
-        #bound an experimental sample at 5000 observations
+        #lower bound an experimental sample at 5000 observations
         nextSampleSize <- min(max(minSampleSize,round(rt(1,df=3,ncp=tncp))),maxSampleSize)
         nextRegime <- regime[currentSample]
         if (currentSample >= startKnockoutNum) {

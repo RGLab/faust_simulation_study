@@ -114,7 +114,7 @@ if (!dir.exists(file.path(normalizePath("."),jobPath,"results"))) {
 
 ###########################################################################
 #
-#Assign responder status to the samples at random, 15 responders, 15 non
+#Assign responder status to the samples at random, 10 responders, 10 non
 #
 ###########################################################################
 print(paste0("Processing ",numberOfClusters," number of clusters."))        
@@ -645,7 +645,7 @@ saveRDS(phenographSimResults,
 
 ################################################################################
 #
-#apply phenograph to the simulated data
+#apply depeche to the simulated data
 #
 ################################################################################
 depecheResult <- depeche(exprsMat,nCores=10,k=(2*numberOfClusters))

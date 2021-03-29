@@ -6,9 +6,9 @@ library(cowplot)
 library(RColorBrewer)
 
 #
-# point to the location of the simulation results
+#modify this path so it points to the location of the simulation results
 #
-resultsDir <- file.path(normalizePath("../.."),"faustRuns","simulation")
+resultsDir <- file.path(normalizePath("."),"simulation")
 
 #
 #get color palette, and define a common legend for displaying results.
@@ -68,9 +68,9 @@ computeNCDF <- function(dataSource,methodName){
     for (i in seq(length(lb))) {
         methodClusterAvg <- append(methodClusterAvg,median(dataSource[seq(lb[i],ub[i])]))
         methodClusterSD <- append(methodClusterSD,sd(dataSource[seq(lb[i],ub[i])]))
-        names(methodClusterAvg)[length(methodClusterAvg)] <- currentTruthNum #(i*baseClusterNum)
-        names(methodClusterSD)[length(methodClusterSD)] <- currentTruthNum #(i*baseClusterNum)
-        currentTruthNum <- (currentTruthNum + 10)
+        names(methodClusterAvg)[length(methodClusterAvg)] <- currentTruthNum 
+        names(methodClusterSD)[length(methodClusterSD)] <- currentTruthNum 
+        currentTruthNum <- (currentTruthNum + 10) #step size 10 for the sim
     }
     outputDF <- data.frame(
         truth=as.numeric(names(methodClusterAvg)),
@@ -90,9 +90,9 @@ computeMetricDF <- function(dataSource,methodName){
     for (i in seq(length(lb))) {
         methodMetricMed <- append(methodMetricMed,median(dataSource[seq(lb[i],ub[i])]))
         methodMetricSD <- append(methodMetricSD,sd(dataSource[seq(lb[i],ub[i])]))
-        names(methodMetricMed)[length(methodMetricMed)] <- currentTruthNum #(i*baseClusterNum)
-        names(methodMetricSD)[length(methodMetricSD)] <- currentTruthNum #(i*baseClusterNum)
-        currentTruthNum <- (currentTruthNum + 10)
+        names(methodMetricMed)[length(methodMetricMed)] <- currentTruthNum 
+        names(methodMetricSD)[length(methodMetricSD)] <- currentTruthNum 
+        currentTruthNum <- (currentTruthNum + 10) #step size 10
     }
     outputDF <- data.frame(
         truth=as.numeric(names(methodMetricMed)),
@@ -217,7 +217,7 @@ gatherResults <- function(methodType) {
 #points are jittered with 0.0125 height so there isn't crossing of predicted performance categories
 #since we simulate a perfect predictor, warnings are due to a method finding it, recovering perfect
 #performance, and then jittering above 1 for cvAUC; we constrain this from happening, and note so
-#in the manuscript.
+#in the methods section of the manuscript.
 #
 #
 ########################################################################################################
